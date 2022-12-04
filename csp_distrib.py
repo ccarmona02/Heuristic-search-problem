@@ -28,9 +28,9 @@ def read_info():
             std = Student(id, y, t, m, s) 
             students.append(std)
 
-    return students 
+    return students,  my_file.name
 
-def main(stds):
+def main(stds, out):
     #Organize the distribution of students in the bus 
     
     problem=Problem()
@@ -93,7 +93,7 @@ def main(stds):
         if b not in close_area:
             return True
 
-    def sit_together(a, b): #probar con not(not_together)
+    def sit_together(a, b): #a sits next to the aisle.
         if((a%2)==0):
             if (b == a-1):
                 return True
@@ -113,14 +113,25 @@ def main(stds):
     for i in range(0, len(studentsID)):
         excpt=False
         for j in range(0, len(studentsID)):
-            if (stds[i].sibs==stds[j].id):
-                excpt=True
-                if (stds[i].rmob == 'R'):
+            if (stds[i].sibs == stds[j].id):
+                if (stds[i].year=='2')and(stds[j].year=='1'):
+                    excpt=True
+
+                if (stds[i].rmob == 'R') and (stds[j].rmob == 'X'):
+                    problem.addConstraint(rmobseats, stds[i].id)
+                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                elif(stds[i].rmob == 'X') and (stds[j].rmob == 'R'):
+                    problem.addConstraint(rmobseats, stds[j].id)
+                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                elif(stds[i].rmob == 'R') and (stds[j].rmob == 'R'):
+                    problem.addConstraint(rmobseats, stds[j].id)
                     problem.addConstraint(rmobseats, stds[i].id)
                     problem.addConstraint(not_together, (stds[i].id, stds[j].id))
                 else:
-                    problem.addConstraint(sit_together, (stds[i].id, stds[j].id))
-
+                    if(((stds[i].year=='1') and (stds[j].year=='1'))or((stds[i].year=='2') and (stds[j].year=='2')) or ((stds[i].year=='2') and (stds[j].year=='1'))):
+                        problem.addConstraint(sit_together, (stds[i].id, stds[j].id))
+                    else:
+                        problem.addConstraint(sit_together, (stds[j].id, stds[i].id))
 
             else:
                 if (stds[i].rmob == 'R'):
@@ -140,12 +151,17 @@ def main(stds):
         else:
             problem.addConstraint(first_block, stds[i].id)
 
-    #for sol in problem.getSolutions():
-    #    print(f"One solution is : {sol}")
-    print(problem.getSolution())
-    #print(f"The number of solutions is {len(problem.getSolution())}")
+
+    out_file= out + ".out"
+    #print(len(problem.getSolutions()))
+    ofile=open(out_file, 'w')
+    ofile.write(f'Number of solutions: {len(problem.getSolution())} \n') #getSolutions(), pero hay algo que falla
+    for i in range (0, 1): #tendríamos q poner, for in problem.getSolutions(): print(f'One sol is: {sol} \n')
+        ofile.write(f'One sol is: {str(problem.getSolution())} \n')
+
+    ofile.close()
     
 
 if __name__ == "__main__":
-    stds= read_info()    
-    main(stds)
+    stds, name_file= read_info()    
+    main(stds, name_file)
