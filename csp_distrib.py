@@ -58,9 +58,42 @@ def main(stds):
                 return True 
 
     def not_close(a, b):
-        ...
-         
-    def sit_together(a, b):
+        close_area=[] #we defined the concept of close
+        if ((a%4)==2): #left of the bus next the aisle 
+            close_area.append(a-1)
+            close_area.append(a+1)
+            close_area.append(a+3)
+            close_area.append(a-3)
+            close_area.append(a+4)
+            close_area.append(a-4)
+            close_area.append(a-5)
+            close_area.append(a+5)
+        elif ((a%4)==0): #window in right part of the bus 
+            close_area.append(a-1)
+            close_area.append(a-4)
+            close_area.append(a+4)
+            close_area.append(a+3)
+            close_area.append(a-5)
+        elif (((a+1)%4)==2):
+            close_area.append(a+1)
+            close_area.append(a-1)
+            close_area.append(a+3)
+            close_area.append(a-3)
+            close_area.append(a+4)
+            close_area.append(a-4)
+            close_area.append(a+5)
+            close_area.append(a-5)
+        else:
+            close_area.append(a+1)
+            close_area.append(a-3)
+            close_area.append(a-4)
+            close_area.append(a+4)
+            close_area.append(a+5)
+
+        if b not in close_area:
+            return True
+
+    def sit_together(a, b): #probar con not(not_together)
         if((a%2)==0):
             if (b == a-1):
                 return True
@@ -78,23 +111,41 @@ def main(stds):
 
     #establish constraints
     for i in range(0, len(studentsID)):
+        excpt=False
         for j in range(0, len(studentsID)):
-            if (stds[i].rmob == 'R'):
-                problem.addConstraint(rmobseats, stds[i].id)
-                problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+            if (stds[i].sibs==stds[j].id):
+                excpt=True
+                if (stds[i].rmob == 'R') or (stds[j].rmob == 'R'):
+                    problem.addConstraint(rmobseats, stds[i].id)
+                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                #elif(stds[i].rmob == 'R') and (stds[j].rmob == 'R'):
+                    
+                else:
+                    problem.addConstraint(sit_together, (stds[i].id, stds[j].id))
 
-            if ((stds[i].troub=='C') and (stds[j].troub=='C')):
-                problem.addConstraint(not_together, (stds[i].id , stds[j].id))
 
-        if (stds[i].year=='1'):
-            problem.addConstraint(first_block, stds[i].id)
+            else:
+                if (stds[i].rmob == 'R'):
+                    problem.addConstraint(rmobseats, stds[i].id)
+                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                    if (stds[j].troub=='C'):
+                        problem.addConstraint(not_close, (stds[i].id, stds[j].id))
+
+                if ((stds[i].troub=='C') and (stds[j].troub=='C')):
+                    problem.addConstraint(not_close, (stds[i].id , stds[j].id))
+
+        if not excpt:
+            if (stds[i].year=='1'):
+                problem.addConstraint(first_block, stds[i].id)
+            else:
+                problem.addConstraint(second_block, stds[i].id)
         else:
-            problem.addConstraint(second_block, stds[i].id)
+            problem.addConstraint(first_block, stds[i].id)
 
     #for sol in problem.getSolutions():
     #    print(f"One solution is : {sol}")
     print(problem.getSolution())
-    print(f"The number of solutions is {len(problem.getSolution())}")
+    #print(f"The number of solutions is {len(problem.getSolution())}")
     
 
 if __name__ == "__main__":
