@@ -115,11 +115,9 @@ def main(stds):
         for j in range(0, len(studentsID)):
             if (stds[i].sibs==stds[j].id):
                 excpt=True
-                if (stds[i].rmob == 'R') or (stds[j].rmob == 'R'):
+                if (stds[i].rmob == 'R'):
                     problem.addConstraint(rmobseats, stds[i].id)
                     problem.addConstraint(not_together, (stds[i].id, stds[j].id))
-                #elif(stds[i].rmob == 'R') and (stds[j].rmob == 'R'):
-                    
                 else:
                     problem.addConstraint(sit_together, (stds[i].id, stds[j].id))
 
