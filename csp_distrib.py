@@ -22,13 +22,36 @@ def read_info():
             lin.split()
             id=lin[0]
             y=lin[3]
-            t=lin[6]
-            m=lin[9]
-            s=lin[12]
+            if (y==' '):
+                id= lin[0]+lin[1]
+                y=lin[4]
+                t=lin[7]
+                m=lin[10]
+                s=lin[13]
+                if(len(lin)>15):
+                    s=lin[13]+lin[14]
+            else:
+                t=lin[6]
+                m=lin[9]
+                s=lin[12]
+                if(len(lin)>14):
+                   s=lin[12]+lin[13]
+            if (int(id)>32):
+                print('The total capacity of the bus is exceeded, we will take the first 32 students')
+                break
+
             std = Student(id, y, t, m, s) 
             students.append(std)
-
+           
     return students,  my_file.name
+
+def convert_format(sol):
+    correct_format={}
+    for i in range(0, len(stds)):
+        key=stds[i].id + stds[i].troub + stds[i].rmob
+        correct_format[key]= sol[stds[i].id]
+
+    return correct_format
 
 def main(stds, out):
     #Organize the distribution of students in the bus 
@@ -38,7 +61,7 @@ def main(stds, out):
     studentsID=[]
     for i in range (0, len(stds)):
         studentsID.append(stds[i].id)
-   
+  
     problem.addVariables(studentsID, domain)
 
     #functions for the constraints
@@ -152,13 +175,16 @@ def main(stds, out):
             problem.addConstraint(first_block, stds[i].id)
 
 
-    out_file= out + ".out"
-    #print(len(problem.getSolutions()))
+    out_file= out + ".output"
     ofile=open(out_file, 'w')
-    ofile.write(f'Number of solutions: {len(problem.getSolution())} \n') #getSolutions(), pero hay algo que falla
-    for i in range (0, 1): #tendríamos q poner, for in problem.getSolutions(): print(f'One sol is: {sol} \n')
-        ofile.write(f'One sol is: {str(problem.getSolution())} \n')
-
+    ofile.write(f'Number of solutions: {len(problem.getSolutions())} \n') 
+    count=1
+    for i in problem.getSolutions(): 
+        new=convert_format(i)
+        ofile.write(f'Sol {count} is: {new} \n')
+        if(count>4):
+            break
+        count = count+1
     ofile.close()
     
 
