@@ -130,38 +130,38 @@ def main(stds, out):
                     excpt=True
 
                 if (stds[i].rmob == 'R') and (stds[j].rmob == 'X'):
-                    problem.addConstraint(rmobseats, stds[i].id)
-                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                    problem.addConstraint(rmobseats, [stds[i].id])
+                    problem.addConstraint(not_together, ([stds[i].id, stds[j].id]))
                 elif(stds[i].rmob == 'X') and (stds[j].rmob == 'R'):
-                    problem.addConstraint(rmobseats, stds[j].id)
-                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                    problem.addConstraint(rmobseats, [stds[j].id])
+                    problem.addConstraint(not_together, ([stds[i].id, stds[j].id]))
                 elif(stds[i].rmob == 'R') and (stds[j].rmob == 'R'):
-                    problem.addConstraint(rmobseats, stds[j].id)
-                    problem.addConstraint(rmobseats, stds[i].id)
-                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                    problem.addConstraint(rmobseats, [stds[j].id])
+                    problem.addConstraint(rmobseats, [stds[i].id])
+                    problem.addConstraint(not_together, ([stds[i].id, stds[j].id]))
                 else:
                     if(((stds[i].year=='1') and (stds[j].year=='1'))or((stds[i].year=='2') and (stds[j].year=='2')) or ((stds[i].year=='2') and (stds[j].year=='1'))):
-                        problem.addConstraint(sit_together, (stds[i].id, stds[j].id))
+                        problem.addConstraint(sit_together, ([stds[i].id, stds[j].id]))
                     else:
-                        problem.addConstraint(sit_together, (stds[j].id, stds[i].id))
+                        problem.addConstraint(sit_together, ([stds[j].id, stds[i].id]))
 
             else:
                 if (stds[i].rmob == 'R'):
-                    problem.addConstraint(rmobseats, stds[i].id)
-                    problem.addConstraint(not_together, (stds[i].id, stds[j].id))
+                    problem.addConstraint(rmobseats, [stds[i].id])
+                    problem.addConstraint(not_together, ([stds[i].id, stds[j].id]))
                     if (stds[j].troub=='C'):
-                        problem.addConstraint(not_close, (stds[i].id, stds[j].id))
+                        problem.addConstraint(not_close, ([stds[i].id, stds[j].id]))
 
                 if ((stds[i].troub=='C') and (stds[j].troub=='C')):
-                    problem.addConstraint(not_close, (stds[i].id , stds[j].id))
+                    problem.addConstraint(not_close, ([stds[i].id , stds[j].id]))
 
         if not excpt:
             if (stds[i].year=='1'):
-                problem.addConstraint(first_block, stds[i].id)
+                problem.addConstraint(first_block, [stds[i].id])
             else:
-                problem.addConstraint(second_block, stds[i].id)
+                problem.addConstraint(second_block, [stds[i].id])
         else:
-            problem.addConstraint(first_block, stds[i].id)
+            problem.addConstraint(first_block, [stds[i].id])
 
 
     out_file= out + ".output"
