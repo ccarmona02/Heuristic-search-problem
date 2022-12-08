@@ -19,23 +19,12 @@ def read_info():
         lines = my_file.readlines()
         for i in range (0, len(lines)):
             lin= lines[i]
-            lin.split()
-            id=lin[0]
-            y=lin[3]
-            if (y==' '):
-                id= lin[0]+lin[1]
-                y=lin[4]
-                t=lin[7]
-                m=lin[10]
-                s=lin[13]
-                if(len(lin)>15):
-                    s=lin[13]+lin[14]
-            else:
-                t=lin[6]
-                m=lin[9]
-                s=lin[12]
-                if(len(lin)>14):
-                   s=lin[12]+lin[13]
+            splitted = lin.split(", ")
+            id=splitted[0]
+            y=splitted[1]
+            t=splitted[2]
+            m=splitted[3]
+            s=splitted[4]
             if (int(id)>32):
                 print('The total capacity of the bus is exceeded, we will take the first 32 students')
                 break
@@ -57,7 +46,7 @@ def main(stds, out):
     #Organize the distribution of students in the bus 
     
     problem=Problem()
-    domain = range(32)
+    domain = range(1,33)
     studentsID=[]
     for i in range (0, len(stds)):
         studentsID.append(stds[i].id)
