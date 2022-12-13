@@ -163,7 +163,6 @@ def main(stds, out):
         else:
             problem.addConstraint(first_block, [stds[i].id])
 
-
     out_file= out + ".output"
     ofile=open(out_file, 'w')
     ofile.write(f'Number of solutions: {len(problem.getSolutions())} \n') 
@@ -178,5 +177,10 @@ def main(stds, out):
     
 
 if __name__ == "__main__":
+    if (len(sys.argv) != 2):
+        print('Incorrect format: Try again \n')
+        print('CSPBusSeats.py <path students>')
+        sys.exit()
+
     stds, name_file= read_info()    
     main(stds, name_file)
