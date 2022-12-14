@@ -169,7 +169,7 @@ def main(stds, out):
     count=1
     for i in problem.getSolutions(): 
         new=convert_format(i)
-        ofile.write(f'Sol {count} is: {new} \n')
+        ofile.write(f'{new} \n')
         if(count>4):
             break
         count = count+1
