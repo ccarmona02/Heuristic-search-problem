@@ -17,6 +17,12 @@ def read_info():
     students=[]
     with open(sys.argv[1], 'r') as my_file:
         lines = my_file.readlines()
+        if len(lines)>32:
+            out_file= my_file.name + ".output"
+            ofile=open(out_file, 'w')
+            ofile.write(f'There are no solutions since the number of students ({len(lines)}) exceeds bus capacity ')
+            ofile.close 
+            sys.exit()
         for i in range (0, len(lines)):
             lin= lines[i]
             splitted = lin.split(", ")
@@ -24,10 +30,7 @@ def read_info():
             y=splitted[1]
             t=splitted[2]
             m=splitted[3]
-            s=splitted[4]
-            if (int(id)>32):
-                print('The total capacity of the bus is exceeded, we will take the first 32 students')
-                break
+            s=splitted[4][0]
 
             std = Student(id, y, t, m, s) 
             students.append(std)
